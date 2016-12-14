@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">LauncherTest</string>
+    <string name="app_name">Turner Contstruction</string>
 
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="video1_text">Video 1</string>
+    <string name="video2_text">Video 2</string>
+    <string name="video3_text">Video 3</string>
+    <string name="video4_text">Video 4</string>
 </resources>

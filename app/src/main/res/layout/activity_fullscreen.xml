@@ -2,72 +2,131 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0099cc"
-    tools:context="com.example.brent.launchertest.FullscreenActivity">
+    android:background="@color/switch_thumb_disabled_material_dark"
+    tools:context="com.example.brent.launchertest.FullscreenActivity"
+    >
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
          TextureView, etc. -->
-    <TextView
-        android:id="@+id/fullscreen_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:keepScreenOn="true"
-        android:text="@string/dummy_content"
-        android:textColor="#33b5e5"
-        android:textSize="50sp"
-        android:textStyle="bold" />
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->
-    <FrameLayout
+
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:id="@+id/imageView"
+        android:layout_gravity="center"
+        android:background="@drawable/blueturner"
+        android:alpha=".8"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/fullscreen_content_controls"
-            style="?metaButtonBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:background="@color/black_overlay"
             android:orientation="horizontal"
-            tools:ignore="UselessParent">
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-            <Button
-                android:id="@+id/dummy_button"
-                style="?metaButtonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+            <RelativeLayout
                 android:layout_weight="1"
-                android:text="@string/dummy_button" />
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="60dp"
+                android:layout_marginBottom="60dp"
+                android:layout_marginLeft="80dp"
+                android:layout_marginRight="80dp"
+                >
+                <VideoView
+                    android:text="New Button"
+                    android:id="@+id/vidView1"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    />
+            </RelativeLayout>
 
+            <RelativeLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="60dp"
+                android:layout_marginBottom="60dp"
+                android:layout_marginLeft="80dp"
+                android:layout_marginRight="80dp"
+                >
+                <VideoView
+                    android:text="New Button"
+                    android:id="@+id/vidView2"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    />
+            </RelativeLayout>
         </LinearLayout>
 
-        <GridLayout
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:columnCount="2"
-            android:rowCount="2">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            >
 
+            <RelativeLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="60dp"
+                android:layout_marginBottom="60dp"
+                android:layout_marginLeft="80dp"
+                android:layout_marginRight="80dp"
+                >
+                <VideoView
+                    android:text="New Button"
+                    android:id="@+id/vidView3"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="60dp"
+                android:layout_marginBottom="60dp"
+                android:layout_marginLeft="80dp"
+                android:layout_marginRight="80dp"
+                >
             <VideoView
-                android:layout_width="304dp"
-                android:layout_height="132dp"
-                android:id="@+id/videoView"
-                android:layout_gravity="left|top"
-                android:layout_row="0"
-                android:layout_column="0" />
-
-            <VideoView
-                android:layout_width="302dp"
-                android:layout_height="124dp"
-                android:id="@+id/videoView2"
-                android:layout_gravity="center_horizontal|top"
-                android:layout_row="1"
-                android:layout_column="0" />
-        </GridLayout>
-    </FrameLayout>
-
+                android:text="New Button"
+                android:id="@+id/vidView4"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                />
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
 </FrameLayout>
