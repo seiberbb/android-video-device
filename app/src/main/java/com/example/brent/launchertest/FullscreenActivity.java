@@ -3,16 +3,19 @@ package com.example.brent.launchertest;
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
+import android.os.Environment;
 import android.support.v4.content.pm.ActivityInfoCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import java.io.File;
 import java.util.ResourceBundle;
 
 /**
@@ -28,6 +31,19 @@ public class FullscreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fullscreen);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+//        String path = Environment.getExternalStorageDirectory().toString()+"/Turner";
+        String path = "/sdcard";
+        Log.e("Files", "Path: " + path);
+        File directory = new File(path);
+        File[] files = directory.listFiles();
+        Log.e("Files", "Size: "+ files.length);
+        for (int i = 0; i < files.length; i++)
+        {
+            Log.e("Files", "FileName:" + files[i].getName());
+        }
+
+/*
 
         int index = 1;
         videoViews[0] = (VideoView)findViewById(R.id.vidView1);
@@ -51,15 +67,28 @@ public class FullscreenActivity extends AppCompatActivity {
                 }
             });
 //            vidView.setVideoPath("android.resource://com.example.brent.launchertest/" + R.raw.video1);
-            vidView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+
+//            vidView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//                @Override
+//                public void onPrepared(MediaPlayer mp) {
+//                    mp.setLooping(true);
+//                }
+//            });
+
+            vidView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
                 @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mp.setLooping(true);
+                public void onCompletion(MediaPlayer mp) {
+                    mp.start();
                 }
             });
+
             vidView.start();
+
 //            index++;
         }
+
+*/
     }
 
     public void playVideo(View view) {
