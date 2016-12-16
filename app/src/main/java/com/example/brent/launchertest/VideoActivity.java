@@ -1,12 +1,18 @@
 package com.example.brent.launchertest;
 
 import android.annotation.SuppressLint;
+import android.media.MediaPlayer;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.MediaController;
+import android.widget.VideoView;
+
+import java.io.File;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -31,7 +37,7 @@ public class VideoActivity extends AppCompatActivity {
      */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
-    private View mContentView;
+    private VideoView mContentView;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -91,7 +97,7 @@ public class VideoActivity extends AppCompatActivity {
 
         mVisible = true;
 //        mControlsView = findViewById(R.id.fullscreen_content_controls);
-        mContentView = findViewById(R.id.fullscreen_content);
+        mContentView = (VideoView)findViewById(R.id.fullscreen_content);
 
 
         // Set up the user interaction to manually show or hide the system UI.
@@ -102,8 +108,63 @@ public class VideoActivity extends AppCompatActivity {
             }
         });
 
+        String videoPath = getIntent().getStringExtra(FullscreenActivity.EXTRA_MESSAGE);
+        Log.i("data retrieved:" , videoPath);
         hide();
+
+        loadVideo(videoPath);
     }
+
+
+    private boolean loadVideo(String path) {
+
+        int index = 1;
+        final VideoView vidView = mContentView;
+        vidView.setVideoPath(path);
+
+
+            MediaController mediaController = new MediaController(this);
+            mediaController.setVisibility(View.VISIBLE);
+            mediaController.setAnchorView(vidView);
+
+// Init Video
+            vidView.setMediaController(mediaController);
+
+/*            vidView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    Log.i("Event", "" +event.getAction());
+                    if(event.getAction() == MotionEvent.ACTION_UP) {
+                        Log.i("Video", "VidView touched");
+                        toggle();
+                    }
+                    return true;
+                }
+            });
+            */
+//            vidView.setVideoPath("android.resource://com.example.brent.launchertest/" + R.raw.video1);
+
+            vidView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    Log.i("preparing", "Set to looping");
+                    mp.start();
+                }
+            });
+            vidView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    Log.i("Video","VidView completed.  returning");
+                    finish();
+                }
+            });
+
+            vidView.start();
+
+        return true;
+    }
+
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -129,7 +190,6 @@ public class VideoActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
-//        mControlsView.setVisibility(View.GONE);
         mVisible = false;
 
         // Schedule a runnable to remove the status and navigation bar after a delay
