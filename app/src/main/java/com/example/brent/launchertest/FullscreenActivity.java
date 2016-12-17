@@ -6,25 +6,37 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.MediaController;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
+
+//TODO: Disable sound on thumbnails
+//TODO: Add text to screen under thumbnails
+//TODO: Intro vid
+//
 public class FullscreenActivity extends AppCompatActivity {
     private View mContentView;
     private VideoView[] videoViews = new VideoView[4];
+    private TextView[] textViews = new TextView[4];
     private File directory = null;
     public final static String EXTRA_MESSAGE = "videoPath";
+    private boolean videosLoaded = false;
 
 
     @Override
@@ -33,21 +45,22 @@ public class FullscreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_fullscreen);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-//        String path = Environment.getExternalStorageDirectory().toString()+"/Turner";
-        if (!loadVideos("/mnt/extsd")) {
-            if (!loadVideos("/sdcard")) {
-                new AlertDialog.Builder(this)
-                        .setMessage("No 'Turner' directory found on SD Card or device storage")
-                        .setCancelable(false)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                FullscreenActivity.this.finish();
-                            }
-                        })
-                        .show();
-            }
-        }
 
+            if (!loadVideos(Environment.getExternalStorageDirectory().toString())) {
+                if (!loadVideos("/mnt/extsd")) {
+                    if (!loadVideos("/sdcard")) {
+                        new AlertDialog.Builder(this)
+                                .setMessage("No 'Turner' directory found on SD Card or device storage")
+                                .setCancelable(false)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        FullscreenActivity.this.finish();
+                                    }
+                                })
+                                .show();
+                    }
+                }
+            }
 /*
 
         int index = 1;
@@ -98,6 +111,22 @@ public class FullscreenActivity extends AppCompatActivity {
 
     private boolean loadVideos(String path) {
         Log.i("Files", "Path: " + path);
+        File topLevel = new File(path);
+        File[] topFiles = topLevel.listFiles();
+
+        if ((topFiles == null) || (topFiles.length == 0)) {
+            return false;
+        }
+        Log.e("TopFiles", "Size: "+ topFiles.length);
+        for (int i = 0; i < topFiles.length; i++)
+        {
+            Log.e("TopFiles", "FileName:" + topFiles[i].getName());
+        }
+
+
+
+
+
         directory = new File(path + "/Turner");
         File[] files = directory.listFiles();
         if ((files == null) || (files.length == 0)) {
@@ -134,7 +163,6 @@ public class FullscreenActivity extends AppCompatActivity {
             MediaController mediaController = new MediaController(this);
             mediaController.setVisibility(View.GONE);
             mediaController.setAnchorView(vidView);
-
 // Init Video
             vidView.setMediaController(mediaController);
 
@@ -166,6 +194,9 @@ public class FullscreenActivity extends AppCompatActivity {
                     Log.i("Video","VidView completed.  Should be restarting");
                     try {
                         mp.seekTo(0);
+                        if (!mp.isPlaying()) {
+                            mp.start();
+                        }
                     } catch (Exception e) {
                         Log.e("mp", "error", e);
                     }
@@ -176,12 +207,54 @@ public class FullscreenActivity extends AppCompatActivity {
 
             index++;
         }
+        videosLoaded = true;
+        loadText(path);
         return true;
     }
 
 
+
+    private boolean loadText(String path) {
+
+          Log.i("Text Files", "Path: " + path);
+          File topLevel = new File(path);
+          int index = 1;
+          textViews[0] = (TextView) findViewById(R.id.textView1);
+          textViews[1] = (TextView) findViewById(R.id.textView2);
+          textViews[2] = (TextView) findViewById(R.id.textView3);
+          textViews[3] = (TextView) findViewById(R.id.textView4);
+
+          for (final TextView textView : textViews) {
+
+
+              //Get the text file
+              File file = new File(path + "/Turner", "video" + index + ".txt");
+
+              //Read text from file
+              StringBuilder text = new StringBuilder();
+
+              try {
+                  BufferedReader br = new BufferedReader(new FileReader(file));
+                  String line;
+
+                  text.append(br.readLine());
+                  br.close();
+              } catch (IOException e) {
+                  //You'll need to add proper error handling here
+                  Log.e("TextFiles", "CANT LOAD!");
+                  return false;
+              }
+
+              //Set the text
+              textView.setText(text.toString());
+              index++;
+          }
+        return true;
+      }
+
+
     public void playVideo(VideoView view, int videoIndex) {
-        Toast.makeText(view.getContext(), "Trying to play!", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(view.getContext(), "Trying to play!", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, VideoActivity.class);
         String videoPath = directory.getAbsolutePath() + "/video" + videoIndex + ".mp4";
         intent.putExtra(EXTRA_MESSAGE, videoPath);
@@ -190,25 +263,54 @@ public class FullscreenActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        stopAllVideos();
         super.onPause();
+        Log.i("Lifecycle", "Pause!");
+        stopAllVideos();
+
     }
 
     @Override
     protected void onResume() {
-        startAllVideos();
         super.onResume();
+        Log.i("Lifecycle", "Resume!");
+        startAllVideos();
     }
+
+//    @Override
+//    protected void onStop() {
+//        Log.i("Lifecycle", "Stop!");
+//        stopAllVideos();
+//        super.onStop();
+//    }
+//
+//    @Override
+//    protected void onRestart() {
+//        Log.i("Lifecycle", "Restart!");
+//        startAllVideos();
+//        super.onRestart();
+//    }
+//
+//    @Override
+//    protected void onStart() {
+//        Log.i("Lifecycle", "Start!");
+//        super.onStart();
+//    }
 
     private void stopAllVideos() {
         for (final VideoView vidView : videoViews) {
-            vidView.start();
+            if (videosLoaded && (vidView!=null) && vidView.isPlaying()) {
+                Log.i("Lifecycle", "already playing, pausing");
+                vidView.pause();
+            }
         }
     }
 
     private void startAllVideos() {
         for (final VideoView vidView : videoViews) {
-            vidView.stopPlayback();
+            if (videosLoaded && (vidView!=null) && !vidView.isPlaying()) {
+                Log.i("Lifecycle", "not already playing, resuming");
+                vidView.resume();
+            }
         }
     }
 
