@@ -1,28 +1,21 @@
 package com.example.brent.launchertest;
 
 import android.annotation.SuppressLint;
-import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.DisplayMetrics;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.MediaController;
 import android.widget.VideoView;
-
-import java.io.File;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class VideoActivity extends AppCompatActivity {
+public class IntroActivity extends AppCompatActivity {
 
     private int currentPosition;
     private MediaPlayer mp = null;
@@ -100,7 +93,7 @@ public class VideoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
         setContentView(R.layout.activity_video);
 
         mVisible = true;
@@ -173,7 +166,7 @@ public class VideoActivity extends AppCompatActivity {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
                     Log.i("preparing", "grabbing mp");
-                    VideoActivity.this.mp = mp;
+                    IntroActivity.this.mp = mp;
 //                    mp.start();
                 }
             });

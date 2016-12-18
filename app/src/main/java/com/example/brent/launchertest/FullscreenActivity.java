@@ -44,9 +44,16 @@ public class FullscreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fullscreen);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        mContentView = findViewById(R.id.imageView);
+//        mContentView.setSystemUiVisibility(
+//                  View.SYSTEM_UI_FLAG_FULLSCREEN
+//                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+//                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
 
-            if (!loadVideos(Environment.getExternalStorageDirectory().toString())) {
+        if (!loadVideos(Environment.getExternalStorageDirectory().toString())) {
                 if (!loadVideos("/mnt/extsd")) {
                     if (!loadVideos("/sdcard")) {
                         new AlertDialog.Builder(this)
@@ -184,6 +191,7 @@ public class FullscreenActivity extends AppCompatActivity {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
                     Log.i("preparing", "Set to looping");
+                    mp.setVolume(0f,0f);
                     mp.start();
                 }
             });
@@ -193,10 +201,12 @@ public class FullscreenActivity extends AppCompatActivity {
                 public void onCompletion(MediaPlayer mp) {
                     Log.i("Video","VidView completed.  Should be restarting");
                     try {
-                        mp.seekTo(0);
-                        if (!mp.isPlaying()) {
+//                        if (!mp.isPlaying()) {
+                            mp.seekTo(0);
                             mp.start();
-                        }
+//                        } else {
+//                            Log.w("Video", videoIndex + "completed but still playing!");
+//                        }
                     } catch (Exception e) {
                         Log.e("mp", "error", e);
                     }
@@ -212,7 +222,10 @@ public class FullscreenActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
 
+    }
 
     private boolean loadText(String path) {
 
@@ -258,7 +271,9 @@ public class FullscreenActivity extends AppCompatActivity {
         Intent intent = new Intent(this, VideoActivity.class);
         String videoPath = directory.getAbsolutePath() + "/video" + videoIndex + ".mp4";
         intent.putExtra(EXTRA_MESSAGE, videoPath);
+        Log.i("Activity", "Leaving");
         startActivity(intent);
+        Log.i("Activity", "Returned");
     }
 
     @Override
